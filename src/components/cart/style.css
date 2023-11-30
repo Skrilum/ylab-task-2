@@ -1,0 +1,21 @@
+.Cart {
+
+}
+
+.Cart-items {
+    margin-top: 70px;
+}
+
+.Cart-result {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 118px;
+    padding-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.Cart-result-price {
+    padding-left: 52px;
+    padding-bottom: 88px;
+}

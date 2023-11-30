@@ -18,8 +18,19 @@
   padding: 20px 10px;
 }
 
-.Item-actions {
+.Item__info {
   display: flex;
   justify-content: flex-end;
+  width: 100%;
+  padding: 20px 10px 20px 10px;
+  font-size: 18px;
+  color: #404040;
+}
+
+.Item__info > div:not(:first-child) {
+  padding-left: 62px;
+}
+
+.Item-actions {
   padding: 20px 20px 20px 10px;
 }
