@@ -1,17 +1,33 @@
-.Cart-items {
-    margin-top: 70px;
+.Cart {
+  width: 960px;
 }
 
-.Cart-result {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 118px;
-    padding-top: 20px;
-    font-weight: bold;
-    font-size: 18px;
+.Cart-button {
+  width: 76px;
 }
 
-.Cart-result-price {
-    padding-left: 52px;
-    padding-bottom: 88px;
+.Cart-list-wrapper {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.Cart-total {
+  display: flex;
+  padding: 20px;
+  font-size: 18px;
+}
+
+.Cart-total-title {
+  width: 100%;
+  text-align: end;
+}
+
+.Cart-total-count {
+  justify-self: flex-start;
+  padding-left: 53px;
+  padding-right: 90px;
+}
+
+.Cart-empty-warning {
+  text-align: center;
 }

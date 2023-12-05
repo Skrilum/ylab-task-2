@@ -3,12 +3,16 @@ import PropTypes from 'prop-types';
 import Item from "../item";
 import './style.css';
 
-function List({list, onButtonCLick, buttonName }) {
+function List({ list, isCartList = false, itemHandler }) {
   return (
     <div className='List'>{
       list.map(item =>
         <div key={item.code} className='List-item'>
-          <Item item={item} onButtonCLick={onButtonCLick} buttonName={buttonName}/>
+          <Item
+            item={item}
+            isCartList={isCartList}
+            itemHandler={itemHandler}
+          />
         </div>
       )}
     </div>
@@ -17,14 +21,17 @@ function List({list, onButtonCLick, buttonName }) {
 
 List.propTypes = {
   list: PropTypes.arrayOf(PropTypes.shape({
-    code: PropTypes.number
+    code: PropTypes.number,
+    title: PropTypes.string,
+    price: PropTypes.number,
+    count: PropTypes.number,
   })).isRequired,
-  onButtonCLick: PropTypes.func,
+  isCartList: PropTypes.bool,
+  itemHandler: PropTypes.func,
 };
 
 List.defaultProps = {
-  onButtonCLick: () => {
-  }
+  isCartList: false
 }
 
 export default React.memo(List);

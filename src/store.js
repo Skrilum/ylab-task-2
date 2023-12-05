@@ -1,19 +1,9 @@
-import {generateCode} from "./utils";
-
 /**
  * Хранилище состояния приложения
  */
 class Store {
   constructor(initState = {}) {
-    this.state = {
-      cart:{
-        list: [], // Выбор в сторону производительности {code, title, price, count}
-        totalPrice: 0,
-        quantity: 0
-      },
-      list: [],
-      ...initState,
-    };
+    this.state = initState;
     this.listeners = []; // Слушатели изменений состояния
   }
 
@@ -44,48 +34,63 @@ class Store {
    */
   setState(newState) {
     this.state = newState;
-    console.log(this.state);
     // Вызываем всех слушателей
     for (const listener of this.listeners) listener();
   }
 
   /**
-   * Добавление товара в корзину
-   * @param item {Object}
+    * Удаление продукта из корзины
+    * @param item
+    */
+  removeFromCart(item) {
+    const { code } = item;
+    const { cart } = this.state;
+    const { totalCount, totalPrice, list } = cart;
+
+    // Новые значения общего количества товаров и их сумма
+    const newTotalPrice = totalPrice - list[code].totalPrice;
+    const newTotalCount = totalCount - list[code].count;
+
+    // Удаление товара из корзины
+    delete list[code];
+
+    const newCart = {
+      ...cart,
+      totalCount: newTotalCount,
+      totalPrice: newTotalPrice,
+      list: { ...list }
+    };
+
+    this.setState({ ...this.state, cart: newCart });
+  };
+
+  /**
+   * Добавление продукта в корзину
+   * @param item
    */
   addItemToCart(item) {
-    const existingItemIndex = this.state.cart.list.findIndex(cartItem => cartItem.code === item.code);
-    const newCartList = [...this.state.cart.list];
-    if (existingItemIndex !== -1) {
-      newCartList[existingItemIndex] = {...item, count: newCartList[existingItemIndex].count + 1};
-    } else {
-      newCartList.push({...item, count: 1});
-    }
-    this.setCart(newCartList);
-  };
+    const { totalPrice, totalCount, list } = this.state.cart;
+    const { code, price } = item;
 
-  /**
-   * Удаление товара из корзины
-   * @param item {Object}
-   */
-  deleteItemFromCart(item) {
-    const newCartList = this.state.cart.list.filter(cartItem => cartItem.code !== item.code);
-    this.setCart(newCartList);
-  };
+    // Проверка наличия продукта в корзине
+    const hasInCart = list.hasOwnProperty(code);
 
-  /**
-   * Установка нового значения корзины и вызов setState
-   * @param newCartList {Object}
-   */
-  setCart(newCartList) {
-    this.setState({
-      ...this.state,
-      cart: {
-        list: newCartList,
-        totalPrice: newCartList.reduce((total, currentItem) => total + (currentItem.price * currentItem.count), 0),
-        quantity: newCartList.reduce((total, currentItem) => total + currentItem.count, 0)
+    const newCart = {
+      // Новые значения общей суммы и количества товара в корзине
+      totalPrice: totalPrice + price,
+      totalCount: totalCount + 1,
+      list: {
+        ...list,
+        [code]: {
+          // Новые значения суммы и количества добавляемого товара
+          count: hasInCart ? list[code].count + 1 : 1,
+          totalPrice: hasInCart ? list[code].totalPrice + price : price,
+          item
+        }
       }
-    })
+    };
+
+    this.setState({ ...this.state, cart: newCart });
   }
 }
 

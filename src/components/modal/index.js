@@ -1,24 +1,40 @@
-import React from "react"
-import PropTypes from "prop-types"
-import "./style.css"
+import React, {useMemo, useEffect} from "react";
+import { createPortal } from "react-dom";
+import PropTypes from 'prop-types';
+import './style.css';
 
-function Modal({ isShow, children }){
-    return (
-        <>
-          {isShow && (
-            <div className={"Modal"}>
-              <div className={"Modal-content"}>
-                {children}
-              </div>
-            </div>
-          )}
-        </>
-      );
+const rootElement = document.querySelector('#root');
+
+function Modal({ children, onModalClose }) {
+  const container = useMemo(() => document.createElement('div'), []);
+
+  useEffect(() => {
+    rootElement.appendChild(container);
+    return () => {
+      rootElement.removeChild(container)
+    }
+  })
+
+  const onStopPropagation = (event) => {
+    event.stopPropagation();
+  }
+
+  return createPortal(
+    <div onClick={onModalClose} className={'Modal-background'}>
+      <div onClick={onStopPropagation} className={'Modal'}>{children}</div>
+    </div>
+    , container);
 }
 
 Modal.propTypes = {
-    isShow: PropTypes.bool,
-    children: PropTypes.node
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ]).isRequired
+};
+
+Modal.defaultProps = {
+  onModalClose: () => { },
 }
 
-export default React.memo(Modal)
+export default React.memo(Modal);

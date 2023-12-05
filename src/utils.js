@@ -1,4 +1,18 @@
 /**
+ * Форматирование числа (в т.ч. валюту, проценты)
+ * Возвращает строку из отформатированного числа, с учетом переданных опций.
+ * @param value {Number} Форматируемое число.
+ * @param options {Object<String | Number | Boolean>} Опции форматирования числа.
+ * @example formatNumber(123456789, { style: 'currency', currency: 'RUB', minimumFractionDigits: 2 })
+ * @param [locale] {String} Локаль (код языка)
+ * @returns {string}
+ */
+export function formatNumber(value, options = {}, locale = 'ru-RU') {
+  const formatter = new Intl.NumberFormat(locale, options);
+  return formatter.format(value);
+}
+
+/**
  * Плюрализация
  * Возвращает вариант с учётом правил множественного числа под указанную локаль
  * @param value {Number} Число, под которое выбирается вариант формы.
@@ -49,16 +63,4 @@ export const generateCode1 = (function (start = 0) {
  */
 export function generateCode2() {
   return generateCode2.value ? ++generateCode2.value : generateCode2.value = 1;
-}
-
-/**
- * @param num {Number} Число, под которое выбирается вариант формы.
- * @param currency {String} Валюта.
- * @example formatNumberWithCurrency(100)
- * @param locale {String} Локаль (код языка)
- * @returns {Number}
- */
-export function formatNumberWithCurrency(num, currency = 'RUB', locale = 'ru-RU') {
-  const formatter = new Intl.NumberFormat(locale, { style: 'currency', currency, maximumFractionDigits: 0 });
-  return formatter.format(num);
 }
